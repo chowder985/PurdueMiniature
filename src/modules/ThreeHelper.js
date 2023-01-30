@@ -55,3 +55,23 @@ export function loadBoilermakerXtraSpecial(scene) {
         });
     });
 }
+
+export function loadTitleText(scene) {
+    const mtlLoader = new MTLLoader();
+    mtlLoader.load('models/CareerCampusTitle/CareerCampusTitleText.mtl', (mtl) => {
+        mtl.preload();
+        const objLoader = new OBJLoader();
+        objLoader.setMaterials(mtl);
+        objLoader.load('models/CareerCampusTitle/CareerCampusTitleText.obj', (title) => {
+            title.position.set(15, 170, 0);
+            title.scale.set(0.5, 0.5, 0.5);
+            scene.add(title);
+            title.name = 'title';
+            console.log(title.name);
+        }, (xhr) => {
+            if (xhr.loaded / xhr.total == 1) {
+                console.log("LOADED");
+            }
+        });
+    });
+}

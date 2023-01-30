@@ -83,6 +83,16 @@ const CARDS = {
         "imgSrc": ["Images/LI-Logo.png"],
         "href":["https://www.linkedin.com/learning/learning-linkedin-3/set-up-a-new-linkedin-account-2?u=21108259 "],
     },
+    // This is a content for the main menu
+    8: {
+        "question": "jfs;ladkjf",
+        "title": "fdsfds",
+        "top": "jtetestseds",
+        "isDoubleContent": false,
+        "bot": ["teskashlgdfs"],
+        "imgSrc": ["Images/LI-Logo.png"],
+        "href":["https://www.linkedin.com/learning/learning-linkedin-3/set-up-a-new-linkedin-account-2?u=21108259 "],
+    }
 
 };
 

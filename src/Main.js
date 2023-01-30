@@ -6,13 +6,16 @@ import * as WorldPhysic from './modules/WorldPhysics.js'
 import * as Vehicle from './modules/Vehicle.js'
 import * as ThreeHelper from './modules/ThreeHelper.js'
 
-// three.js variables
+// three.js variables 
 const canvas = document.querySelector('#c');
-let camera, scene, renderer;
+let camera, scene, renderer, orbitControls;
 let raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
-pointer.x = 100;
-pointer.y = 100;
+let pointer = new THREE.Vector3(0, 0, 0);
+let targetPosition = new THREE.Vector3(0, 0, 0);
+let cameraAngle = new THREE.Quaternion(-0.2897841486884301, 0, 0, 0.9570920264890529);
+let mouseX = 0, mouseY = 0;
+let alpha = 0.05;
+let isChaseCam = false;
 let intersects = [];
 
 // cannon.js variables
@@ -33,6 +36,18 @@ const origin = new THREE.Vector2(0, 0.4)
 // document.getElementById("next-slide").onclick = ContentManager.rotateCardsNext;
 // document.getElementById("prev-slide").onclick = ContentManager.rotateCardsPrev;
 
+const questions = document.getElementsByClassName('question-box');
+for (const question of questions) {
+    question.onclick = e => {
+        let id = e.target.dataset['id'];
+        console.log(id);
+        isChaseCam = true;
+        const questionsList = document.getElementById('question-menu');
+        questionsList.classList.toggle("d-none");
+        questionsList.classList.toggle("d-flex");
+    }
+}
+
 initThree();
 
 function initThree() {
@@ -42,9 +57,9 @@ function initThree() {
     const near = 0.1;
     const far = 2000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(99, 204, 112);
-
-
+    camera.position.set(15, 150, 130);
+    // camera.position.set(99, 204, 112);
+    
     // Scene
     scene = new THREE.Scene()
     scene.background = new THREE.Color('#CBD9E6');
@@ -55,6 +70,8 @@ function initThree() {
 
     ThreeHelper.load3dMap(scene);
 
+    ThreeHelper.loadTitleText(scene);
+
 
     // Renderer
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
@@ -63,7 +80,13 @@ function initThree() {
 
     document.body.appendChild(renderer.domElement)
 
-    const orbitControls = new OrbitControls(camera, renderer.domElement);
+    // orbitControls = new OrbitControls(camera, renderer.domElement);
+    // orbitControls.enableDamping = true;
+    // orbitControls.dampingFactor = 0.05;
+    // orbitControls.screenSpacePanning = false;
+    // orbitControls.minDistance = 0.1;
+    // orbitControls.maxDistance = 2000;
+    // orbitControls.maxPolarAngle = Math.PI / 2;
 
     window.addEventListener('resize', onWindowResize)
 
@@ -94,7 +117,7 @@ function initCannon() {
 
 
     // Create the physics of the Car
-    chassisBody = Vehicle.initChassisBody({x: -220, y: 90, z:-50});
+    chassisBody = Vehicle.initChassisBody();
     vehicle = Vehicle.initVehicle(world, scene, chassisBody, wheelBody, wheelMaterial);
 
     // Adding physics of the world
@@ -135,7 +158,8 @@ function initCannon() {
 
             // Adding checkpoints, these are thin blocks to indicate when the vehicle should stop.
             // How does the vehicle know when to stop? Refer to calculate check point
-            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(-180,90,-80), ContentManager.CARDS[0], false)
+            // WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(-220,90,-80), ContentManager.CARDS[8], true)
+            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(-180,90,-80), ContentManager.CARDS[0], true)
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(-70,90,-80), ContentManager.CARDS[1], false)
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(20,90,-80), ContentManager.CARDS[2], false)
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(120,90,-80), ContentManager.CARDS[3], false)
@@ -194,7 +218,7 @@ function animate() {
         train.position.y -= 0.5
     
         if (train.position.y < -100) {
-            chassisBody.position.set(-200, 90, -50)
+            chassisBody.position.set(-200, 80, -50)
             chassisBody.quaternion.setFromEuler(0, Math.PI, 0)
             chassisBody.angularVelocity.set(0, 0, 0)
             chassisBody.velocity.set(0, 0, 0)
@@ -202,14 +226,41 @@ function animate() {
     } catch (e) {
         console.log("error in updating chasis body");
     }
-    const isChaseCam = true
-    if (isChaseCam) {
-        camera.position.x = chassisBody.position.x;
-        camera.position.y = chassisBody.position.y + 40;
-        camera.position.z = chassisBody.position.z + 60;
-        camera.lookAt(new THREE.Vector3(chassisBody.position.x, chassisBody.position.y, chassisBody.position.z));
-    }
 
+    let title = scene.getObjectByName("title", true);
+    try {
+        pointer.x += (mouseX - pointer.x) * .02 + 0.3;
+        pointer.y += (- mouseY - pointer.y) * .02 + 3.7;
+        pointer.z = camera.position.z;
+        title.lookAt(pointer);
+    } catch (e) {
+        console.log("error in finding mouse position");
+    }
+    
+    if (isChaseCam) {
+        // camera.position.x = chassisBody.position.x;
+        // camera.position.y = chassisBody.position.y + 40;
+        // camera.position.z = chassisBody.position.z + 60;
+        targetPosition.x = chassisBody.position.x;
+        targetPosition.y = chassisBody.position.y + 40;
+        targetPosition.z = chassisBody.position.z + 60;
+
+        if (Math.round(camera.position.y * 100)/100 <= 122.55) {
+            alpha = 1;
+            
+            // console.log(Math.round(camera.position.y * 100)/100)
+        }
+        camera.position.lerp(targetPosition, alpha);
+
+        if (alpha == 1) {
+            camera.lookAt(new THREE.Vector3(chassisBody.position.x, chassisBody.position.y, chassisBody.position.z));
+        } else {
+            camera.quaternion.slerp(cameraAngle, 0.05);
+        }
+    } else {
+        camera.lookAt(new THREE.Vector3(15, 100, -120));
+    }
+    
     render()
 }
 
@@ -233,6 +284,8 @@ function render() {
         calculateCheckPoint();
         // document.getElementById("start-slide").style.display = "none";
     }
+    //orbitControls.update();
+
     renderer.render(scene, camera)
 }
 
@@ -287,35 +340,44 @@ function calculateCheckPoint() {
     
     raycaster.setFromCamera(origin, camera)
 
-    const intersects = raycaster.intersectObjects(scene.children)
+    const intersects = raycaster.intersectObjects(scene.children);
 
     if (intersects.length != 0) {
-
+        chassisBody.quaternion.setFromEuler(0, Math.PI, 0);
+        chassisBody.angularVelocity.set(0, 0, 0);
         chassisBody.velocity.set(0,0,0)        
         // call the cards out because the vehicle is in checkpoint
         ContentManager.updateContent(document, intersects[0].object.content)
         ContentManager.addCard()
 
+    } else {
+        ContentManager.removeCard()
     }
 }
 
 function onPointerMove(event) {
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    // pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    // pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    mouseX = (event.clientX - (window.innerWidth / 2)) * 0.1;
+    mouseY = (event.clientY - (window.innerHeight / 2)) * 0.1;
 }
 
 document.addEventListener('mousemove', onPointerMove, true)
-document.addEventListener('keydown', (event) => {  
-    if (event.repeat) {
-        return
+document.addEventListener('keydown', (event) => { 
+    if (alpha != 1) {
+        event.preventDefault();
+    } else {
+        // if (event.repeat) { //|| (chassisBody.velocity !== {x: 0, y:0, z:0})
+        //     return
+        // }
+        Vehicle.vehicleControlKeyDown(event, vehicle, chassisBody);
     }
-    Vehicle.vehicleControlKeyDown(event, vehicle, chassisBody);
 });
 
 
 // Reset force on keyup
 document.addEventListener('keyup', (event) => {
-    // Vehicle.vehicleControlKeyUp(event, vehicle, chassisBody);
+    Vehicle.vehicleControlKeyUp(event, vehicle, chassisBody);
     if (event.key == 'Escape') {
         ContentManager.removeCard();
     }

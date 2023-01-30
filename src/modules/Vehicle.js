@@ -117,25 +117,33 @@ export function vehicleControlKeyDown(event, vehicle, chassisBody) {
     const brakeForce = 10000;
 
     switch (event.key) {
-        case 'w':
-        case 'W':
+        case 'd':
+        case 'D':
         case 'ArrowRight':
-            if (chassisBody.velocity.x < 0) {
-                chassisBody.velocity.x = 0
-            } else {
-                chassisBody.velocity.x = 30
-            }
+            vehicle.applyEngineForce(-maxForce, 0);
+            vehicle.applyEngineForce(-maxForce, 1);
+            vehicle.applyEngineForce(-maxForce, 2);
+            vehicle.applyEngineForce(-maxForce, 3);
             break;
+            // if (chassisBody.velocity.x < 0) {
+            //     chassisBody.velocity.x = 0
+            // } else {
+            //     chassisBody.velocity.x = 30
+            // }
+            // break;
 
-        case 's':
-        case 'S':
+        case 'a':
+        case 'A':
         case 'ArrowLeft':
-            if (chassisBody.velocity.x > 0) {
-                chassisBody.velocity.x = 0
-            } else {
-                chassisBody.velocity.x = -30
-            }
+            vehicle.applyEngineForce(maxForce, 2);
+            vehicle.applyEngineForce(maxForce, 3);
             break;
+            // if (chassisBody.velocity.x > 0) {
+            //     chassisBody.velocity.x = 0
+            // } else {
+            //     chassisBody.velocity.x = -30
+            // }
+            // break;
 
         // case 'a':
         // case 'A':
@@ -172,18 +180,11 @@ export function vehicleControlKeyDown(event, vehicle, chassisBody) {
 
 export function vehicleControlKeyUp(event, vehicle, chassisBody) {
     switch (event.key) {
-        case 'w':
-        case 'W':
-        case 'ArrowUp':
+        case 'd':
+        case 'D':
+        case 'ArrowRight':
             vehicle.applyEngineForce(0, 0);
             vehicle.applyEngineForce(0, 1);
-            vehicle.applyEngineForce(0, 2);
-            vehicle.applyEngineForce(0, 3);
-            break;
-
-        case 's':
-        case 'S':
-        case 'ArrowDown':
             vehicle.applyEngineForce(0, 2);
             vehicle.applyEngineForce(0, 3);
             break;
@@ -191,16 +192,23 @@ export function vehicleControlKeyUp(event, vehicle, chassisBody) {
         case 'a':
         case 'A':
         case 'ArrowLeft':
-            vehicle.setSteeringValue(0, 0);
-            vehicle.setSteeringValue(0, 1);
+            vehicle.applyEngineForce(0, 2);
+            vehicle.applyEngineForce(0, 3);
             break;
 
-        case 'd':
-        case 'D':
-        case 'ArrowRight':
-            vehicle.setSteeringValue(0, 0);
-            vehicle.setSteeringValue(0, 1);
-            break;
+        // case 'a':
+        // case 'A':
+        // case 'ArrowLeft':
+        //     vehicle.setSteeringValue(0, 0);
+        //     vehicle.setSteeringValue(0, 1);
+        //     break;
+
+        // case 'd':
+        // case 'D':
+        // case 'ArrowRight':
+        //     vehicle.setSteeringValue(0, 0);
+        //     vehicle.setSteeringValue(0, 1);
+        //     break;
 
         case 'q':
             chassisBody.velocity.y = -5;

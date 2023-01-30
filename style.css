@@ -112,6 +112,22 @@ img {
     overflow-y: auto;
 }
 
+#question-menu {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 30%;
+}
+
+.question-box {
+    cursor: pointer;
+    background: white;
+    padding: 50px;
+    min-width: 15%;
+}
+
 svg {
     height: 300px;
     width: 300px;
