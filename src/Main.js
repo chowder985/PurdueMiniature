@@ -12,6 +12,7 @@ let camera, scene, renderer, orbitControls;
 let raycaster = new THREE.Raycaster();
 let pointer = new THREE.Vector3(0, 0, 0);
 let targetPosition = new THREE.Vector3(0, 0, 0);
+let targetID = undefined;
 let cameraAngle = new THREE.Quaternion(-0.2897841486884301, 0, 0, 0.9570920264890529);
 let mouseX = 0, mouseY = 0;
 let alpha = 0.05;
@@ -35,18 +36,6 @@ const origin = new THREE.Vector2(0, 0.4)
 // document.getElementById("x-button").onclick = ContentManager.removeCard;
 // document.getElementById("next-slide").onclick = ContentManager.rotateCardsNext;
 // document.getElementById("prev-slide").onclick = ContentManager.rotateCardsPrev;
-
-const questions = document.getElementsByClassName('question-box');
-for (const question of questions) {
-    question.onclick = e => {
-        let id = e.target.dataset['id'];
-        console.log(id);
-        isChaseCam = true;
-        const questionsList = document.getElementById('question-menu');
-        questionsList.classList.toggle("d-none");
-        questionsList.classList.toggle("d-flex");
-    }
-}
 
 initThree();
 
@@ -254,9 +243,22 @@ function animate() {
 
         if (alpha == 1) {
             camera.lookAt(new THREE.Vector3(chassisBody.position.x, chassisBody.position.y, chassisBody.position.z));
+            switch(targetID) {
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                    if (chassisBody.velocity.x < 0) {
+                        chassisBody.velocity.x = 0;
+                    } else {
+                        chassisBody.velocity.x = 30;
+                    }
+                    break;
+            }
         } else {
             camera.quaternion.slerp(cameraAngle, 0.05);
         }
+        
     } else {
         camera.lookAt(new THREE.Vector3(15, 100, -120));
     }
@@ -342,14 +344,14 @@ function calculateCheckPoint() {
 
     const intersects = raycaster.intersectObjects(scene.children);
 
-    if (intersects.length != 0) {
+    if ((intersects.length != 0) && ((targetID == undefined) || (targetID == intersects[0].object.content.id))) {
+        targetID = undefined;
         chassisBody.quaternion.setFromEuler(0, Math.PI, 0);
-        chassisBody.angularVelocity.set(0, 0, 0);
+        // chassisBody.angularVelocity.set(0, 0, 0);
         chassisBody.velocity.set(0,0,0)        
         // call the cards out because the vehicle is in checkpoint
         ContentManager.updateContent(document, intersects[0].object.content)
         ContentManager.addCard()
-
     } else {
         ContentManager.removeCard()
     }
@@ -360,6 +362,17 @@ function onPointerMove(event) {
     // pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
     mouseX = (event.clientX - (window.innerWidth / 2)) * 0.1;
     mouseY = (event.clientY - (window.innerHeight / 2)) * 0.1;
+}
+
+const questions = document.getElementsByClassName('question-box');
+for (const question of questions) {
+    question.onclick = e => {
+        targetID = e.target.dataset['id'];
+        isChaseCam = true;
+        const questionsList = document.getElementById('question-menu');
+        questionsList.classList.toggle("d-none");
+        questionsList.classList.toggle("d-flex");
+    }
 }
 
 document.addEventListener('mousemove', onPointerMove, true)

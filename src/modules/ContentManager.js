@@ -1,6 +1,7 @@
 const CARDS = {
     // contentID = 0
     0: {
+        "id": "0",
         "question": "How do my personality, interests, skills and values come together to help me find a good-fit career?",
         "title": "Know Yourself",
         "top": "An in-depth understanding of your strengths is foundational to finding the right major and exploring suitable careers.",
@@ -11,6 +12,7 @@ const CARDS = {
     },
     // contentID = 1
     1: {
+        "id": "1",
         "question": "How can I be more certain of what I want to do and know how to get where I want to go?",
         "title": "Find Where You Want To Go",
         "top": "Learn from others! Listening to the career choices other people have made can offer you ideas of your own!",
@@ -21,6 +23,7 @@ const CARDS = {
     },
     // contentID = 2
     2: {
+        "id": "2",
         "question": "What can I do with my major?",
         "title": "Find Where You Want To Go",
         "top": "Discover many of the possible career options related to your major and read about them so you can make the best choice for you!",
@@ -31,6 +34,7 @@ const CARDS = {
     },
     // contentID = 3
     3: {
+        "id": "3",
         "question": "How can Purdue help me find opportunities to get good experiences in my field?",
         "title": "Find Where You Want To Go",
         "top": "You don't know if you like something until you actually do it! Gain new skills and relevant experiences to help you narrow down your career interests.",
@@ -41,6 +45,7 @@ const CARDS = {
     },
     // contentID = 4
     4: {
+        "id": "4",
         "question": "How do I write a resume so it gets me an interview?",
         "title": "Show Who You Are",
         "top": "Your resume is the employer’s first impression of you. Check out these resources to learn how to develop a strategic resume that is tailored to the position you are applying for.",
@@ -161,12 +166,14 @@ function updateContent(document, contentToAdd) {
 function removeCard() {
     document.getElementById("info-card").classList.remove("popShow");
     document.getElementById("info-card").classList.add("popHide");
+    document.getElementById("info-card-container").classList.remove("blur");
     document.getElementById("question-container").classList.remove("popShow");
     document.getElementById("question-container").classList.add("popHide");
 }
 
 function addCard () {
     document.getElementById("info-card").classList.add("popShow");
+    document.getElementById("info-card-container").classList.add("blur");
     document.getElementById("info-card").classList.remove("popHide");
     if (window.outerWidth >= 576) {
         document.getElementById("question-container").classList.add("popShow");

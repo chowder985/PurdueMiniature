@@ -24,14 +24,27 @@ body {
 }
 
 .card-container {
-    height: 80vh;
+    /* height: 80vh; */
     display: block;
     border-radius: 30px;
-    position: absolute;
+    /* position: absolute; */
     padding: 20px;
-    left: 0;
-    right: 0;
-    top: 10px;
+    /* left: auto;
+    right: auto;
+    top: 10px; */
+}
+
+#info-card-container {
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+}
+
+.blur {
+    backdrop-filter: blur(8px);
 }
 
 .card-top {
@@ -132,7 +145,7 @@ svg {
     height: 300px;
     width: 300px;
     position: absolute;
-    left: 45%;
+    right: 10px;
     top: -85px;
 }
 path {
