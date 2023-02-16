@@ -45,6 +45,7 @@ body {
 
 .blur {
     backdrop-filter: blur(8px);
+    transition: all 1s;
 }
 
 .card-top {
@@ -136,14 +137,31 @@ img {
 
 .question-box {
     cursor: pointer;
-    background: white;
-    padding: 50px;
-    min-width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    width: 20%;
+    background-color: #cfb991; 
+    border: 2px solid #8e6f3e; 
+    color: black; 
+    font-family: United Sans, Impact, Arial Black, sans serif, serif; 
+    border-radius: 0; 
+    font-weight: bold; 
+    font-size: 20px;
+    padding: 5px 20px;
+}
+
+.raise:hover,
+.raise:focus {
+    transition: 0.25s;
+    transform: translateY(-0.25em);
+    box-shadow: 0px 3px 5px black;
 }
 
 svg {
-    height: 300px;
-    width: 300px;
+    height: 350px;
+    width: 350px;
     position: absolute;
     right: 10px;
     top: -85px;
@@ -259,6 +277,41 @@ text {
     top: 10px;
     bottom: 10px;
 }
+
+#collapseCardBtn {
+    /* height: 50px;
+    width: 50px; */
+    padding: 8px;
+    background-color: white;
+    border-radius: 100%;
+    position: absolute;
+    bottom: 40px;
+    right: 50px;
+}
+
+.animate {
+    animation-duration: 0.75s;
+    animation-delay: 0.5s;
+    animation-name: animate-slide;
+    animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+    animation-fill-mode: backwards;
+}
+
+.animate.slide { 
+    animation-name: animate-slide; 
+}
+
+@keyframes animate-slide {
+  0% {
+    opacity: 0;
+    transform: translate(0, 20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
 @-webkit-keyframes spin {
     0%   {
         -webkit-transform: rotate(0deg);
@@ -304,5 +357,15 @@ text {
     }
     img {
         max-height: 50px;
+    }
+}
+
+@media (max-width: 992px) {
+    #question-menu {
+        height: 100%;
+        bottom: auto;
+    }
+    .question-box {
+        width: auto;
     }
 }

@@ -124,6 +124,9 @@ function updateContent(document, contentToAdd) {
         mainContainer.classList.add("double-content");
         let botContentRightContainer = document.createElement('div');
         botContentRightContainer.classList.add("col");
+        botContentRightContainer.classList.add("d-flex");
+        botContentRightContainer.classList.add("flex-column");
+        botContentRightContainer.classList.add("justify-content-between");
         botContentRightContainer.id = "content-on-the-right";
         let botContentRightLogo = document.createElement('img');
         let botContentRightText = document.createElement('p');
@@ -169,17 +172,32 @@ function removeCard() {
     document.getElementById("info-card-container").classList.remove("blur");
     document.getElementById("question-container").classList.remove("popShow");
     document.getElementById("question-container").classList.add("popHide");
+    document.getElementById("collapseCardBtn").classList.add("animate");
+    document.getElementById("collapseCardBtn").classList.add("slide");
+    document.getElementById("collapseCardBtn").classList.remove("d-none");
 }
 
 function addCard () {
     document.getElementById("info-card").classList.add("popShow");
-    document.getElementById("info-card-container").classList.add("blur");
     document.getElementById("info-card").classList.remove("popHide");
+    document.getElementById("info-card-container").classList.add("blur");
+    if (!document.getElementById("collapseCardBtn").classList.contains('d-none')) {
+        document.getElementById("collapseCardBtn").classList.remove("animate");
+        document.getElementById("collapseCardBtn").classList.remove("slide");
+        document.getElementById("collapseCardBtn").classList.add("d-none");
+    }
     if (window.outerWidth >= 576) {
         document.getElementById("question-container").classList.add("popShow");
         document.getElementById("question-container").classList.remove("popHide");
     }
+}
 
+function toggleCard() {
+    if (document.getElementById("info-card").classList.contains("popShow")) {
+        removeCard();
+    } else {
+        addCard();
+    }
 }
 
 let currentID = -1;
@@ -206,6 +224,6 @@ function rotateCardsPrev() {
     addCard();
 }
 
-export { updateContent, removeCard, addCard, CARDS, rotateCardsNext, rotateCardsPrev };
+export { updateContent, removeCard, addCard, toggleCard, CARDS, rotateCardsNext, rotateCardsPrev };
 
 
