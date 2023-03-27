@@ -45,7 +45,7 @@ body {
 
 .blur {
     backdrop-filter: blur(8px);
-    transition: all 1s;
+    /* transition: all 1s; */
 }
 
 .card-top {
@@ -151,6 +151,15 @@ img {
     font-size: 20px;
     padding: 5px 20px;
 }
+
+/* #tutorial {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    padding: 15px;
+    border-radius: 20px;
+    background-color: white;
+} */
 
 .raise:hover,
 .raise:focus {
@@ -287,6 +296,7 @@ text {
     position: absolute;
     bottom: 40px;
     right: 50px;
+    cursor: pointer;
 }
 
 .animate {

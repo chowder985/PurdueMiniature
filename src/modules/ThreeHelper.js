@@ -75,3 +75,25 @@ export function loadTitleText(scene) {
         });
     });
 }
+
+export function loadTutorialUI(scene) {
+    const mtlLoader = new MTLLoader();
+    mtlLoader.load('models/TutorialUI/TutorialUI.mtl', (mtl) => {
+        mtl.preload();
+        const objLoader = new OBJLoader();
+        objLoader.setMaterials(mtl);
+        objLoader.load('models/TutorialUI/TutorialUI.obj', (tutorial) => {
+            // tutorial.position.set(-245, 100, -20);
+            tutorial.position.set(-220, 110, -50);
+            tutorial.scale.set(0.15, 0.15, 0.15);
+            scene.add(tutorial);
+            tutorial.name = 'tutorial';
+            tutorial.visible = false;
+            console.log(tutorial.name);
+        }, (xhr) => {
+            if (xhr.loaded / xhr.total == 1) {
+                console.log("LOADED");
+            }
+        });
+    });
+}

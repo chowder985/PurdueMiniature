@@ -9,15 +9,16 @@ import * as ThreeHelper from './modules/ThreeHelper.js'
 // three.js variables 
 const canvas = document.querySelector('#c');
 const pointToCheckpoint = new THREE.Vector3(0, 0, -1);
-let camera, scene, renderer, orbitControls;
+let camera, scene, renderer, orbitControls, tutorialUI;
 let raycaster = new THREE.Raycaster();
 let pointer = new THREE.Vector3(0, 0, 0);
 let targetPosition = new THREE.Vector3(0, 0, 0);
 let targetID = undefined;
-let slowDown = false;
 let isCheckpoint = false;
+let closeTutorial = false;
 let disableKeyPress = false;
 let cameraAngle = new THREE.Quaternion(-0.2897841486884301, 0, 0, 0.9570920264890529);
+let tutorialAngle = new THREE.Quaternion(-0.10288527619948838, 0, 0, 0.9946932290617823);
 let mouseX = 0, mouseY = 0;
 let alpha = 0.05;
 let isChaseCam = false;
@@ -75,6 +76,7 @@ function initThree() {
 
     ThreeHelper.loadTitleText(scene);
 
+    ThreeHelper.loadTutorialUI(scene);
 
     // Renderer
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
@@ -239,7 +241,11 @@ function animate() {
         console.log("error in finding mouse position");
     }
     
+    tutorialUI = scene.getObjectByName("tutorial", true);
     if (isChaseCam) {
+        if (closeTutorial == false) {
+            tutorialUI.visible = true;
+        }
         // camera.position.x = chassisBody.position.x;
         // camera.position.y = chassisBody.position.y + 40;
         // camera.position.z = chassisBody.position.z + 60;
@@ -264,8 +270,13 @@ function animate() {
         let matched = true;
         if (alpha == 1) {
             camera.lookAt(new THREE.Vector3(chassisBody.position.x, chassisBody.position.y, chassisBody.position.z));
+            // tutorialUI.lookAt(new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z));
+            // tutorialUI.setRotationFromEuler(new THREE.Euler(-Math.PI/6, 0.2, 0, 'XYZ'))
+            // tutorialUI.quaternion.set(tutorialAngle.x, tutorialAngle.y, tutorialAngle.z, tutorialAngle.w);
+            // console.log()
         } else {
             camera.quaternion.slerp(cameraAngle, alpha);
+            tutorialUI.quaternion.slerp(tutorialAngle, 0.01)
         }
         switch(targetID) {
             case '1':
@@ -290,6 +301,7 @@ function animate() {
                 chassisBody.velocity.x = speedup;
             }
         }
+        tutorialUI.position.x = chassisBody.position.x;
     } else {
         camera.lookAt(new THREE.Vector3(15, 100, -120));
     }
@@ -350,8 +362,6 @@ function hoverEffect() {
         scene.add(pyramidMesh)
         ContentManager.updateContent(document, obj.content);
         ContentManager.addCard();
-
-
     } else if (objects.length == 0) {
         if (intersects.length != 0) {
             let removePyramid = scene.getObjectByName("pyramid")
@@ -376,11 +386,13 @@ function calculateCheckPoint() {
     const intersects = raycaster.intersectObjects(scene.children);
 
     if ((intersects.length != 0) && ((targetID == undefined) || (targetID == intersects[0].object.content.id))) {
-        slowDown = false;
         targetID = undefined;
         // call the cards out because the vehicle is in checkpoint
         
         if (!isCheckpoint) {
+            tutorialUI.visible = false;
+            closeTutorial = true;
+
             chassisBody.quaternion.setFromEuler(0, Math.PI, 0);
             chassisBody.angularVelocity.set(0, 0, 0);
             chassisBody.velocity.set(0, 0, 0);
@@ -410,7 +422,7 @@ function onPointerMove(event) {
 
 document.addEventListener('mousemove', onPointerMove, true)
 document.addEventListener('keydown', (event) => { 
-    if ((alpha != 1) || slowDown) {
+    if (alpha != 1) {
         event.preventDefault();
     } else {
         // if (event.repeat) { //|| (chassisBody.velocity !== {x: 0, y:0, z:0})
