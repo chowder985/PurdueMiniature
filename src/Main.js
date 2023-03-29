@@ -8,7 +8,7 @@ import * as ThreeHelper from './modules/ThreeHelper.js'
 
 // three.js variables 
 const canvas = document.querySelector('#c');
-const pointToCheckpoint = new THREE.Vector3(0, 0, -1);
+const pointToCheckpoint = new THREE.Vector3(0, 0.2, -1);
 let camera, scene, renderer, orbitControls, tutorialUI;
 let raycaster = new THREE.Raycaster();
 let pointer = new THREE.Vector3(0, 0, 0);
@@ -168,7 +168,8 @@ function initCannon() {
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(-70,90,-80), ContentManager.CARDS[1], false)
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(20,90,-80), ContentManager.CARDS[2], false)
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(120,90,-80), ContentManager.CARDS[3], false)
-            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(210,90,-80), ContentManager.CARDS[4], false)
+            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(210,90,-80), ContentManager.CARDS[4], true)
+            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(255,90,-80), ContentManager.CARDS[5], true)
         }
 
     }
@@ -262,23 +263,25 @@ function animate() {
             } else {
                 alpha = 1;
             }
-            
         }
         camera.position.lerp(targetPosition, alpha);
+        tutorialUI.lookAt(camera.position);
 
         let speedup = 30;
         let matched = true;
         if (alpha == 1) {
             camera.lookAt(new THREE.Vector3(chassisBody.position.x, chassisBody.position.y, chassisBody.position.z));
-            // tutorialUI.lookAt(new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z));
-            // tutorialUI.setRotationFromEuler(new THREE.Euler(-Math.PI/6, 0.2, 0, 'XYZ'))
-            // tutorialUI.quaternion.set(tutorialAngle.x, tutorialAngle.y, tutorialAngle.z, tutorialAngle.w);
-            // console.log()
         } else {
             camera.quaternion.slerp(cameraAngle, alpha);
-            tutorialUI.quaternion.slerp(tutorialAngle, 0.01)
         }
         switch(targetID) {
+            case '0':
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    speedup = 20;
+                } else {
+                    matched = false;
+                }
+                break;
             case '1':
                 speedup = 30;
                 break;
@@ -322,14 +325,10 @@ function updatePhysics() {
 let pyramidExist = false
 
 function render() {
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-        // const toggle = document.getElementById("chaseCamToggle");
-        // toggle.style.display = "none";
-    } else {
-        calculateCheckPoint();
+    if(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))){
         document.getElementById("start-slide").style.display = "none";
     }
-    //orbitControls.update();
+    calculateCheckPoint();
 
     renderer.render(scene, camera)
 }
@@ -387,6 +386,7 @@ function calculateCheckPoint() {
 
     if ((intersects.length != 0) && ((targetID == undefined) || (targetID == intersects[0].object.content.id))) {
         targetID = undefined;
+        alpha = 1;
         // call the cards out because the vehicle is in checkpoint
         
         if (!isCheckpoint) {

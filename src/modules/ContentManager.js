@@ -60,44 +60,44 @@ const CARDS = {
     },
     // contentID = 5
     5: {
-        "question": "How do I address employers at career fairs and networking events?",
-        "title": "Show Who You Are",
-        "top": "Preparing your pitch will ensure you make a great impression in 20-30 seconds with potential employers.",
+        "question": "How do I make an appointment with a career consultant?",
+        "title": "Make an Appointment",
+        "top": "Receive personalized career guidance from a career consultant.<br>Schedule an appointment with a career consultant to discuss your career goals and get help with your career search.",
         "isDoubleContent": false,
-        "bot": ["Upkey is an entertaining program to help you develop your pitch. Log in and click on “Resume” in the left navigation pane underneath “My Tools.”"],
-        "imgSrc": ["Images/upkey logo.jfif"],
-        "href": ["https://upkey.com/Purdue"],
+        "bot": ["BoilerConnect is a student success system that links staff, faculty, and students in a coordinated support network.<br>Log in and click on “Make an Appointment” in the right panel underneath your profile. Then select “Career/Pre-Professional Advising” and any service under “CCO/~” from the drop-down menus."],
+        "imgSrc": ["Images/BoilerConnectLogo.png"],
+        "href": ["https://purdue.campus.eab.com/"],
     },
     // ContentID = 6
-    6: {
-        "question": "How do I prepare for an interview?",
-        "title": "Show Who You Are",
-        "top": "Learn how to communicate strategically with a potential employer. Do not plan to wing it! Convince employers to hire you.",
-        "isDoubleContent": false,
-        "bot": ["Big Interview is an interview prep system providing you with hands-on practice with mock interviews tailored to your specific industry, job and experience level."],
-        "imgSrc": ["Images/BigInterview_Logo.png"],
-        "href": ["https://purdue.biginterview.com/"],
-    },
-    // contentID = 7
-    7: {
-        "question": "How do I demonstrate my strength?",
-        "title": "Build Your Network",
-        "top": "You cannot ignore your online presence; that’s where many employers will look for you. Make sure your online network is active and working for you!",
-        "isDoubleContent": false,
-        "bot": ["LinkedIn is a professional social media platform that allows you to connect with the world's professionals. You can use LinkedIn to find the right job or internship, create and strengthen professional relationships, and learn the skills you need to succeed in your career."],
-        "imgSrc": ["Images/LI-Logo.png"],
-        "href":["https://www.linkedin.com/learning/learning-linkedin-3/set-up-a-new-linkedin-account-2?u=21108259 "],
-    },
-    // This is a content for the main menu
-    8: {
-        "question": "jfs;ladkjf",
-        "title": "fdsfds",
-        "top": "jtetestseds",
-        "isDoubleContent": false,
-        "bot": ["teskashlgdfs"],
-        "imgSrc": ["Images/LI-Logo.png"],
-        "href":["https://www.linkedin.com/learning/learning-linkedin-3/set-up-a-new-linkedin-account-2?u=21108259 "],
-    }
+    // 6: {
+    //     "question": "How do I prepare for an interview?",
+    //     "title": "Show Who You Are",
+    //     "top": "Learn how to communicate strategically with a potential employer. Do not plan to wing it! Convince employers to hire you.",
+    //     "isDoubleContent": false,
+    //     "bot": ["Big Interview is an interview prep system providing you with hands-on practice with mock interviews tailored to your specific industry, job and experience level."],
+    //     "imgSrc": ["Images/BigInterview_Logo.png"],
+    //     "href": ["https://purdue.biginterview.com/"],
+    // },
+    // // contentID = 7
+    // 7: {
+    //     "question": "How do I demonstrate my strength?",
+    //     "title": "Build Your Network",
+    //     "top": "You cannot ignore your online presence; that’s where many employers will look for you. Make sure your online network is active and working for you!",
+    //     "isDoubleContent": false,
+    //     "bot": ["LinkedIn is a professional social media platform that allows you to connect with the world's professionals. You can use LinkedIn to find the right job or internship, create and strengthen professional relationships, and learn the skills you need to succeed in your career."],
+    //     "imgSrc": ["Images/LI-Logo.png"],
+    //     "href":["https://www.linkedin.com/learning/learning-linkedin-3/set-up-a-new-linkedin-account-2?u=21108259 "],
+    // },
+    // // This is a content for the main menu
+    // 8: {
+    //     "question": "How do I address employers at career fairs and networking events?",
+    //     "title": "Show Who You Are",
+    //     "top": "Preparing your pitch will ensure you make a great impression in 20-30 seconds with potential employers.",
+    //     "isDoubleContent": false,
+    //     "bot": ["Upkey is an entertaining program to help you develop your pitch. Log in and click on “Resume” in the left navigation pane underneath “My Tools.”"],
+    //     "imgSrc": ["Images/upkey logo.jfif"],
+    //     "href": ["https://upkey.com/Purdue"],
+    // }
 
 };
 
@@ -206,7 +206,7 @@ function rotateCardsNext() {
     if (document.getElementById("info-card").classList.contains("popShow")) {
         removeCard();
     }
-    if (currentID >= 8)
+    if (currentID >= 5)
         currentID = -1;
     currentID += 1;
     updateContent(document, CARDS[currentID]);
@@ -217,8 +217,8 @@ function rotateCardsPrev() {
     if (document.getElementById("info-card").classList.contains("popShow")) {
         removeCard();
     }
-    if (currentID < 0)
-        currentID = 8;
+    if (currentID <= 0)
+        currentID = 6;
     currentID -= 1;
     updateContent(document, CARDS[currentID]);
     addCard();

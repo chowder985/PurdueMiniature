@@ -349,8 +349,6 @@ export function addCheckPoint(world, scene, position, content, visuals) {
     
     if (typeof content != 'undefined') {
         checkpointMesh.content = content;
-    } else {
-        checkpointMesh.content = 'slow';
     }
     scene.add(checkpointMesh);
 }
