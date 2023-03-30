@@ -14,14 +14,15 @@ let raycaster = new THREE.Raycaster();
 let pointer = new THREE.Vector3(0, 0, 0);
 let targetPosition = new THREE.Vector3(0, 0, 0);
 let targetID = undefined;
-let isCheckpoint = false;
-let closeTutorial = false;
-let disableKeyPress = false;
 let cameraAngle = new THREE.Quaternion(-0.2897841486884301, 0, 0, 0.9570920264890529);
 let tutorialAngle = new THREE.Quaternion(-0.10288527619948838, 0, 0, 0.9946932290617823);
 let mouseX = 0, mouseY = 0;
 let alpha = 0.05;
 let isChaseCam = false;
+let isCheckpoint = false;
+let closeTutorial = false;
+let displayTutorial = true;
+let disableKeyPress = false;
 let intersects = [];
 
 // cannon.js variables
@@ -37,7 +38,12 @@ const groundMaterial = new CANNON.Material('ground');
 const wheelMaterial = new CANNON.Material('wheel');
 const origin = new THREE.Vector2(0, 0.4)
 
-document.getElementById("x-button").onclick = ContentManager.removeCard;
+document.getElementById("x-button").onclick = () => {
+    ContentManager.removeCard();
+    if (!closeTutorial) {
+        tutorialUI.visible = true;
+    }
+};
 document.getElementById("next-slide").onclick = ContentManager.rotateCardsNext;
 document.getElementById("prev-slide").onclick = ContentManager.rotateCardsPrev;
 document.getElementById("collapseCardBtn").onclick = ContentManager.toggleCard;
@@ -46,6 +52,9 @@ for (const question of questions) {
     question.onclick = e => {
         targetID = e.target.dataset['id'];
         isChaseCam = true;
+        if (targetID == 0) {
+            tutorialUI.visible = true;
+        }
         const questionsList = document.getElementById('question-menu');
         questionsList.classList.toggle("d-none");
         questionsList.classList.toggle("d-flex");
@@ -244,12 +253,6 @@ function animate() {
     
     tutorialUI = scene.getObjectByName("tutorial", true);
     if (isChaseCam) {
-        if (closeTutorial == false) {
-            tutorialUI.visible = true;
-        }
-        // camera.position.x = chassisBody.position.x;
-        // camera.position.y = chassisBody.position.y + 40;
-        // camera.position.z = chassisBody.position.z + 60;
         targetPosition.x = chassisBody.position.x;
         targetPosition.y = chassisBody.position.y + 40;
         targetPosition.z = chassisBody.position.z + 60;
@@ -390,14 +393,16 @@ function calculateCheckPoint() {
         // call the cards out because the vehicle is in checkpoint
         
         if (!isCheckpoint) {
-            tutorialUI.visible = false;
-            closeTutorial = true;
+            if (tutorialUI.visible) {
+                tutorialUI.visible = false;
+                closeTutorial = true;
+            }
 
             chassisBody.quaternion.setFromEuler(0, Math.PI, 0);
             chassisBody.angularVelocity.set(0, 0, 0);
             chassisBody.velocity.set(0, 0, 0);
             chassisBody.position.z = -50;
-            ContentManager.updateContent(document, intersects[0].object.content)
+            ContentManager.updateContent(document, intersects[0].object.content);
             ContentManager.addCard();
             isCheckpoint = true;
             disableKeyPress = true;
@@ -407,6 +412,9 @@ function calculateCheckPoint() {
         }
     } else if (document.getElementById("info-card").classList.contains('popShow') && isCheckpoint){
         ContentManager.removeCard();
+        if (!closeTutorial) {
+            tutorialUI.visible = true;
+        }
         isCheckpoint = false;
     } else {
         isCheckpoint = false;
