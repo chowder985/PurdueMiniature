@@ -167,8 +167,8 @@ function updateContent(document, contentToAdd) {
 }
 
 function removeCard() {
-    document.getElementById("info-card").classList.remove("popShow");
-    document.getElementById("info-card").classList.add("popHide");
+    document.getElementById("info-card-wrapper").classList.remove("popShow");
+    document.getElementById("info-card-wrapper").classList.add("popHide");
     document.getElementById("info-card-container").classList.remove("blur");
     document.getElementById("question-container").classList.remove("popShow");
     document.getElementById("question-container").classList.add("popHide");
@@ -178,8 +178,8 @@ function removeCard() {
 }
 
 function addCard () {
-    document.getElementById("info-card").classList.add("popShow");
-    document.getElementById("info-card").classList.remove("popHide");
+    document.getElementById("info-card-wrapper").classList.add("popShow");
+    document.getElementById("info-card-wrapper").classList.remove("popHide");
     document.getElementById("info-card-container").classList.add("blur");
     if (!document.getElementById("collapseCardBtn").classList.contains('d-none')) {
         document.getElementById("collapseCardBtn").classList.remove("animate");
@@ -193,37 +193,42 @@ function addCard () {
 }
 
 function toggleCard() {
-    if (document.getElementById("info-card").classList.contains("popShow")) {
+    if (document.getElementById("info-card-wrapper").classList.contains("popShow")) {
         removeCard();
     } else {
         addCard();
     }
 }
 
-let currentID = -1;
+let currentID = 0;
 
 function rotateCardsNext() {
-    if (document.getElementById("info-card").classList.contains("popShow")) {
+    currentID = parseInt(localStorage.getItem("currentID"));
+    console.log(currentID);
+    if (document.getElementById("info-card-wrapper").classList.contains("popShow")) {
         removeCard();
     }
     if (currentID >= 5)
         currentID = -1;
     currentID += 1;
+    localStorage.setItem("currentID", currentID);
     updateContent(document, CARDS[currentID]);
     addCard();
 }
 
 function rotateCardsPrev() {
-    if (document.getElementById("info-card").classList.contains("popShow")) {
+    currentID = parseInt(localStorage.getItem("currentID"));
+    if (document.getElementById("info-card-wrapper").classList.contains("popShow")) {
         removeCard();
     }
     if (currentID <= 0)
         currentID = 6;
     currentID -= 1;
+    localStorage.setItem("currentID", currentID);
     updateContent(document, CARDS[currentID]);
     addCard();
 }
 
-export { updateContent, removeCard, addCard, toggleCard, CARDS, rotateCardsNext, rotateCardsPrev };
+export { updateContent, removeCard, addCard, toggleCard, CARDS, rotateCardsNext, rotateCardsPrev, currentID };
 
 

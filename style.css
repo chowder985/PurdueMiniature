@@ -14,12 +14,14 @@ body {
 .popShow {
     opacity: 1;
     transform: scale(1);
+    transform-origin: bottom right;
     transition: transform 1s;
 }
 
 .popHide {
     opacity: 0;
     transform: scale(0.1);
+    transform-origin: bottom right;
     transition: all 1s;
 }
 
@@ -164,7 +166,7 @@ img {
 .raise:hover,
 .raise:focus {
     transition: 0.25s;
-    transform: translateY(-0.25em);
+    transform: translateY(-0.3em);
     box-shadow: 0px 3px 5px black;
 }
 
@@ -290,9 +292,10 @@ text {
 #collapseCardBtn {
     /* height: 50px;
     width: 50px; */
-    padding: 8px;
-    background-color: white;
+    padding: 16px;
     border-radius: 100%;
+    background-color: #cfb991; 
+    border: 2px solid #8e6f3e; 
     position: absolute;
     bottom: 40px;
     right: 50px;

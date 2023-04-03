@@ -8,7 +8,7 @@ import * as ThreeHelper from './modules/ThreeHelper.js'
 
 // three.js variables 
 const canvas = document.querySelector('#c');
-const pointToCheckpoint = new THREE.Vector3(0, 0.2, -1);
+const pointToCheckpoint = new THREE.Vector3(0, 0.5, -1);
 let camera, scene, renderer, orbitControls, tutorialUI;
 let raycaster = new THREE.Raycaster();
 let pointer = new THREE.Vector3(0, 0, 0);
@@ -51,6 +51,8 @@ const questions = document.getElementsByClassName('question-box');
 for (const question of questions) {
     question.onclick = e => {
         targetID = e.target.dataset['id'];
+        localStorage.clear();
+        localStorage.setItem('currentID', targetID);
         isChaseCam = true;
         if (targetID == 0) {
             tutorialUI.visible = true;
@@ -159,7 +161,7 @@ function initCannon() {
             // Adding physics of block0
             WorldPhysic.addBlockPhysics(world, scene, new CANNON.Vec3(260, 32.5, 60), new CANNON.Vec3(20, 48.5, -63), false);
 
-            WorldPhysic.addBellTower(world, scene, new CANNON.Vec3(267, 120, -51), true);
+            WorldPhysic.addBellTower(world, scene, new CANNON.Vec3(267, 120, -51), false);
             
             engineeringFountain = WorldPhysic.loadEngineeringFountain(world, scene, new CANNON.Vec3(-50, 95, -30));
 
@@ -177,8 +179,8 @@ function initCannon() {
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(-70,90,-80), ContentManager.CARDS[1], false)
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(20,90,-80), ContentManager.CARDS[2], false)
             WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(120,90,-80), ContentManager.CARDS[3], false)
-            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(210,90,-80), ContentManager.CARDS[4], true)
-            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(255,90,-80), ContentManager.CARDS[5], true)
+            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(210,90,-80), ContentManager.CARDS[4], false)
+            WorldPhysic.addCheckPoint(world, scene, new CANNON.Vec3(255,90,-80), ContentManager.CARDS[5], false)
         }
 
     }
@@ -410,7 +412,7 @@ function calculateCheckPoint() {
                 disableKeyPress = false;
             }, 2000);
         }
-    } else if (document.getElementById("info-card").classList.contains('popShow') && isCheckpoint){
+    } else if (document.getElementById("info-card-wrapper").classList.contains('popShow') && isCheckpoint){
         ContentManager.removeCard();
         if (!closeTutorial) {
             tutorialUI.visible = true;
